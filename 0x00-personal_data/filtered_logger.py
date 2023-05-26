@@ -6,7 +6,7 @@ from typing import List
 import logging
 import re
 from os import getenv
-import mysql
+import mysql.connector
 
 
 PII_FIELDS = ('email', 'name', 'ssn', 'password', 'phone')
