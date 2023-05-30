@@ -15,7 +15,7 @@ CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 auth = None
 
 
-AUTH_TYPE = os.environ["AUTH_TYPE"]
+AUTH_TYPE = os.getenv("AUTH_TYPE")
 
 if (AUTH_TYPE == "auth"):
     from .auth.auth import Auth
