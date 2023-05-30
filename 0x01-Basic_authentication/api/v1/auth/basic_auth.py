@@ -49,7 +49,13 @@ class BasicAuth(Auth):
                 ":" in decoded_base64_authorization_header):
             return (None, None)
         user_details = decoded_base64_authorization_header.split(":")
-        return tuple(user_details)
+        new_list = []
+        username = user_details[0]
+        new_list.append(username)
+        user_details.pop(0)
+        new_list.append(":".join(user_details))
+        print(tuple(new_list))
+        return tuple(new_list)
 
     def user_object_from_credentials(
             self, user_email: str, user_pwd: str) -> TypeVar('User'):
