@@ -54,7 +54,6 @@ class BasicAuth(Auth):
         new_list.append(username)
         user_details.pop(0)
         new_list.append(":".join(user_details))
-        print(tuple(new_list))
         return tuple(new_list)
 
     def user_object_from_credentials(
