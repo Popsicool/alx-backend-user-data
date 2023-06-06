@@ -51,6 +51,9 @@ class Auth:
         raise ValueError(f"User {email} already exists")
 
     def valid_login(self, email: str, password: str) -> bool:
+        '''
+        validate user login
+        '''
         try:
             user = self._db.find_user_by(email=email)
             if bcrypt.checkpw(password.encode("utf-8"), user.hashed_password):
@@ -94,3 +97,29 @@ class Auth:
             return None
         self._db.update_user(user_id, session_id=None)
         return None
+
+    def get_reset_password_token(self, email: str) -> str:
+        """
+        get reset password token
+        """
+        try:
+            user = self._db.find_user_by(email=email)
+        except NoResultFound:
+            raise ValueError
+        else:
+            tok = _generate_uuid()
+            self._db.update_user(user.id, reset_token=tok)
+            return tok
+
+    def update_password(self, reset_token: str, password: str) -> None:
+        '''
+        update password
+        '''
+        try:
+            user = self._db.find_user_by(reset_token=reset_token)
+        except NoResultFound:
+            raise ValueError
+        else:
+            hass_p = _hash_password(password)
+            self._db.update_user(user.id, password=hass_p, reset_token=None)
+            return None

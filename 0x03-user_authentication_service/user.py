@@ -13,6 +13,7 @@ Base = declarative_base()
 class User(Base):
     '''
     user model
+    This is where the user schema is defined
     '''
     __tablename__ = "user"
 
