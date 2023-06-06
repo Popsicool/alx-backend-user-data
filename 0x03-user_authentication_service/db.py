@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''
 db module
+for all database related activities
 '''
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -13,7 +14,8 @@ from sqlalchemy.exc import InvalidRequestError
 
 
 class DB:
-    """DB class
+    """
+    DB class
     """
 
     def __init__(self) -> None:
@@ -33,9 +35,12 @@ class DB:
             self.__session = DBSession()
         return self.__session
 
-    def add_user(self, email: str, hashed_password: str):
+    def add_user(self, email: str, hashed_password: str) -> User:
         '''
         add user to session
+        Args:
+            Email: str
+            hashed_password: str
         '''
         user = User()
         user.email = email
@@ -44,7 +49,7 @@ class DB:
         self._session.commit()
         return user
 
-    def find_user_by(self, **kwargs):
+    def find_user_by(self, **kwargs) -> User:
         '''
         query by kwargs
         '''
@@ -57,7 +62,7 @@ class DB:
                     return user
         raise NoResultFound
 
-    def update_user(self, user_id: int, **kwargs):
+    def update_user(self, user_id: int, **kwargs) -> User:
         '''
         update user
         '''
