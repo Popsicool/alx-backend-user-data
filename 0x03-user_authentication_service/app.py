@@ -2,7 +2,7 @@
 '''
 flask app
 '''
-from flask import Flask, jsonify, request, abort
+from flask import Flask, jsonify, request, abort, redirect
 from auth import Auth
 
 
@@ -11,7 +11,7 @@ AUTH = Auth()
 
 
 @app.route("/", strict_slashes=False)
-def home():
+def home() -> str:
     '''
     home route
     '''
@@ -19,7 +19,7 @@ def home():
 
 
 @app.route("/users", methods=["POST"], strict_slashes=False)
-def users():
+def users() -> str:
     '''
     return all users
     '''
@@ -33,7 +33,7 @@ def users():
 
 
 @app.route("/sessions", methods=["POST"], strict_slashes=False)
-def login():
+def login() -> str:
     '''
     login user
     '''
@@ -45,6 +45,32 @@ def login():
     resp = jsonify({"email": email, "message": "logged in"})
     resp.set_cookie("session_id", cookies)
     return resp
+
+
+@app.route("/sessions", methods=["DELETE"], strict_slashes=False)
+def logout():
+    '''
+    log out user
+    '''
+    session_id = request.cookies.get("session_id")
+    user = AUTH.get_user_from_session_id(session_id)
+    if user is None:
+        abort(403)
+    Auth.destroy_session(user.id)
+    redirect("/")
+
+
+@app.route("/profile", strict_slashes=False)
+def profile() -> str:
+    """
+    get profile
+    """
+    session_id = request.cookies.get("session_id")
+    user = AUTH.get_user_from_session_id(session_id)
+    print(user)
+    if user is None:
+        abort(403)
+    return jsonify({"email": user.email}), 200
 
 
 if __name__ == "__main__":
