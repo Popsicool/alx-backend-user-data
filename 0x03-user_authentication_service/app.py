@@ -48,13 +48,13 @@ def login() -> str:
 
 
 @app.route("/sessions", methods=["DELETE"], strict_slashes=False)
-def logout() -> None:
+def logout():
     '''
     log out user
     '''
     session_id = request.cookies.get("session_id")
     user = AUTH.get_user_from_session_id(session_id)
-    if user is None:
+    if user is None or session_id is None:
         abort(403)
     Auth.destroy_session(user.id)
     return redirect("/")
@@ -69,7 +69,7 @@ def profile() -> str:
     user = AUTH.get_user_from_session_id(session_id)
     if user is None:
         abort(403)
-    return jsonify({"email": user.email}), 200
+    return jsonify({"email": f"{user.email}"}), 200
 
 
 @app.route("/reset_password", method=["POST"], strict_slashes=False)
@@ -82,8 +82,7 @@ def get_reset_password_token() -> str:
         reset_token = AUTH.get_reset_password_token(email)
     except ValueError:
         abort(403)
-    else:
-        return jsonify({"email": email, "reset_token": reset_token}), 200
+    return jsonify({"email": email, "reset_token": reset_token}), 200
 
 
 @app.route("/reset_password", methods=["PUT"], strict_slashes=False)
@@ -98,8 +97,7 @@ def update_password() -> str:
         res = AUTH.update_password(reset_token, new_password)
     except ValueError:
         abort(400)
-    else:
-        return jsonify({"email": email, "message": "Password updated"}), 200
+    return jsonify({"email": email, "message": "Password updated"}), 200
 
 
 if __name__ == "__main__":
