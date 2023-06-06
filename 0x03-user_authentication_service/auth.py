@@ -59,14 +59,14 @@ class Auth:
             return False
         return False
 
-    def create_session(self, email: str) -> str:
+    def create_session(self, email: str) -> Union[None, str]:
         '''
         create a session for user
         '''
         try:
             user = self._db.find_user_by(email=email)
         except NoResultFound:
-            return
+            return None
         else:
             uid = _generate_uuid()
             self._db.update_user(user.id, session_id=uid)
