@@ -8,7 +8,7 @@ from user import User
 from sqlalchemy.orm.exc import NoResultFound
 
 
-def _hash_password(password: str) -> str:
+def _hash_password(password: str) -> bytes:
     '''
     hash password
     '''
@@ -22,7 +22,7 @@ class Auth:
     """Auth class to interact with the authentication database.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         '''
         initialize
         '''
