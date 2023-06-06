@@ -4,8 +4,8 @@ User model for creating a user Table
 In the databse. It contains different fields of type integer
 and string that can be nullable or not
 '''
-from sqlalchemy import Column, String, Integer
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String
 
 Base = declarative_base()
 
