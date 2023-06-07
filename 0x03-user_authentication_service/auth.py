@@ -65,6 +65,10 @@ class Auth:
     def create_session(self, email: str) -> str:
         '''
         create a session for user
+        Args:
+            takes an email as argument
+        Return:
+            UUId in string format
         '''
         try:
             user = self._db.find_user_by(email=email)
@@ -118,5 +122,5 @@ class Auth:
         except NoResultFound:
             raise ValueError
         hass_p = _hash_password(password)
-        self._db.update_user(user.id, password=hass_p, reset_token=None)
+        self._db.update_user(user.id, hashed_password=hass_p, reset_token=None)
         return None
