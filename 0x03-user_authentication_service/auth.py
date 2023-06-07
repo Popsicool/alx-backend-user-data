@@ -107,11 +107,11 @@ class Auth:
         """
         try:
             user = self._db.find_user_by(email=email)
+            tok = _generate_uuid()
+            self._db.update_user(user.id, reset_token=tok)
+            return tok
         except NoResultFound:
             raise ValueError
-        tok = _generate_uuid()
-        self._db.update_user(user.id, reset_token=tok)
-        return tok
 
     def update_password(self, reset_token: str, password: str) -> None:
         '''
@@ -119,8 +119,8 @@ class Auth:
         '''
         try:
             user = self._db.find_user_by(reset_token=reset_token)
+            hass_p = _hash_password(password)
+            self._db.update_user(user.id, hashed_password=hass_p,
+                                 reset_token=None)
         except NoResultFound:
             raise ValueError
-        hass_p = _hash_password(password)
-        self._db.update_user(user.id, hashed_password=hass_p, reset_token=None)
-        return None
